@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis` AS
+CREATE OR REPLACE TABLE `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis` AS
 
 WITH customer_transaction AS (
   SELECT
@@ -40,12 +40,8 @@ SELECT
   fs.total_transaction_customer,
   CASE
     WHEN fs.total_transaction_customer = 1 
-      THEN 'One-time'
-    WHEN fs.total_transaction_customer BETWEEN 2 AND 3 
-      THEN 'Occasional'
-    WHEN fs.total_transaction_customer BETWEEN 4 AND 5 
-      THEN 'Frequent'
-    ELSE 'Very Frequent'
+      THEN 'One-time Customer'
+    ELSE 'Repeat Customer'
   END AS transaction_frequency_group
 FROM final_transaction AS fs
 LEFT JOIN `rakamin-kf-analytics-508303.kimia_farma.kf_kantor_cabang` AS kc
