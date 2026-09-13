@@ -17,4 +17,4 @@ This project aims to comprehensively analyze Kimia Farma's business performance 
 The dataset used contains information on transactions (kf_final_transaction), branches (kf_kantor_cabang), products (kf_product), and inventory (kf_inventory) during the 2020–2023 period.
 # Dashboard
 [View Interactive Dashboard](https://datastudio.google.com/s/mk6-XHrgb4Q)
-![Business Performance Dashboard](dashboard_image.png)
+![Business Performance Dashboard](dashboard/dashboard_image.png)
