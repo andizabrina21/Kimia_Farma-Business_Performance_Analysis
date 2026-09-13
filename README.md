@@ -1,5 +1,10 @@
+# Tools & Technologies
+**Data Platform:** Google BigQuery\
+**Programming Language:** Structured Query Language (SQL)\
+**Data Visualization:** Google Looker Studio\
+**Documentation:** Github
 # About The Program
-The Project-Based Internship organized by Rakamin is a virtual, project-based internship program designed according to industry standards. One of the projects focuses on Big Data Analytics in collaboration with PT. Kimia Farma, hands-on experience in processing, analyzing, and visualizing data to generate relevant insights that support business needs.
+The Project-Based Internship organized by Rakamin Academy is a virtual, project-based internship program designed according to industry standards. One of the projects focuses on Big Data Analytics in collaboration with PT. Kimia Farma, hands-on experience in processing, analyzing, and visualizing data to generate relevant insights that support business needs.
 # About Kimia Farma
 Kimia Farma is the first and one of the largest pharmaceutical companies in Indonesia, established in 1817. The company operates in the production, distribution, and sale of various pharmaceutical products, medicines, and healthcare products. In addition, Kimia Farma provides healthcare services through a network of pharmacies, clinics, and laboratories located across Indonesia. As one of Indonesia’s largest pharmaceutical company, Kimia Farma plays an important role in supporting public access to quality medicines and healthcare services.
 # Objective
