@@ -1,34 +1,54 @@
-WITH persentase_gross_laba AS(
-  SELECT
-    fts.*,
-    CASE
-      WHEN fts.price <= 50000 THEN 0.10
-      WHEN fts.price <= 100000 THEN 0.15
-      WHEN fts.price <= 300000 THEN 0.20
-      WHEN fts.price <= 500000 THEN 0.25
-      ELSE 0.30
-    END persentase_gross_laba
-  FROM `rakamin-kf-analytics-508303.kimia_farma.kf_final_transaction` AS fts
+CREATE OR REPLACE VIEW `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis` AS
+
+WITH customer_transaction AS (
+  SELECT
+    fts.*,
+    COUNT(DISTINCT transaction_id) OVER (
+      PARTITION BY customer_name
+    ) AS total_transaction_customer
+  FROM `rakamin-kf-analytics-508303.kimia_farma.kf_final_transaction` AS fts
+),
+final_transaction AS(
+  SELECT
+    ct.*,
+    CASE
+      WHEN ct.price <= 50000 THEN 0.10
+      WHEN ct.price > 50000 AND ct.price <= 100000 THEN 0.15
+      WHEN ct.price > 100000 AND ct.price <= 300000 THEN 0.20
+      WHEN ct.price > 300000 AND ct.price <= 500000 THEN 0.25
+      ELSE 0.30
+    END gross_profit_percentage
+  FROM customer_transaction AS ct
 )
 SELECT 
-  fts.transaction_id,
-  fts.date,
-  kc.branch_id,
-  kc.branch_name,
-  kc.kota,
-  kc.provinsi,
-  kc.rating AS rating_cabang,
-  fts.customer_name,
-  p.product_id,
-  p.product_name,
-  fts.price AS actual_price,
-  fts.discount_percentage,
-  persentase_gross_laba,
-  fts.price * (1 - fts.discount_percentage) AS nett_sales,
-  (fts.price * (1 - fts.discount_percentage)) * fts.persentase_gross_laba AS nett_profit,
-  fts.rating AS rating_transaksi
-FROM persentase_gross_laba AS fts
+  fs.transaction_id,
+  date,
+  kc.branch_id,
+  kc.branch_name,
+  kc.kota AS city,
+  kc.provinsi AS province,
+  kc.rating AS branch_rating,
+  fs.customer_name,
+  p.product_id,
+  p.product_name,
+  fs.price AS actual_price,
+  fs.discount_percentage,
+  fs.gross_profit_percentage,
+  fs.price * (1 - fs.discount_percentage) AS nett_sales,
+  (fs.price * (1 - fs.discount_percentage)) * fs.gross_profit_percentage AS nett_profit,
+  fs.rating AS transaction_rating,
+  fs.total_transaction_customer,
+  CASE
+    WHEN fs.total_transaction_customer = 1 
+      THEN 'One-time'
+    WHEN fs.total_transaction_customer BETWEEN 2 AND 3 
+      THEN 'Occasional'
+    WHEN fs.total_transaction_customer BETWEEN 4 AND 5 
+      THEN 'Frequent'
+    ELSE 'Very Frequent'
+  END AS transaction_frequency_group
+FROM final_transaction AS fs
 LEFT JOIN `rakamin-kf-analytics-508303.kimia_farma.kf_kantor_cabang` AS kc
-  ON fts.branch_id = kc.branch_id
+  ON fs.branch_id = kc.branch_id
 LEFT JOIN `rakamin-kf-analytics-508303.kimia_farma.kf_product` AS p
-  ON fts.product_id = p.product_id
+  ON fs.product_id = p.product_id
