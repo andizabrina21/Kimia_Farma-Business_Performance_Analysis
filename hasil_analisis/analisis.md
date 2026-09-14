@@ -23,14 +23,15 @@ select
   sum(nett_profit) as total_nett_profit
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by year
+order by year
 ```
 Result
 |year| total_nett_sales|	total_nett_profit|
 |--|--|--|
-|2023-01-01|	80,117,292,611.0|	22,757,862,557.899982|
-|2022-01-01|	80,578,445,844.0|	22,883,598,882.799908|
 |2020-01-01|	80,437,605,040.0|	22,842,355,149.649975|
 |2021-01-01|	80,037,846,824.0|	22,731,171,469.500187|
+|2022-01-01|	80,578,445,844.0|	22,883,598,882.799908|
+|2023-01-01|	80,117,292,611.0|	22,757,862,557.899982|
 
 ## 3. Monthly Nett Sales
 ```sql
