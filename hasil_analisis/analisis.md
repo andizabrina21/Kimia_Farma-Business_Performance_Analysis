@@ -40,15 +40,16 @@ select
   sum(nett_sales) as total_nett_sales
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by month
+order by month
 ```
 Result
 |month|	total_nett_sales|
 |--|--|
-|2023-01-01|	6,842,843,272.0|
-|2022-01-01|	6,869,281,246.0|
+|2020-01-01|	6,840,322,735.0|
 |2020-02-01|	6,414,736,842.0|
-|2020-07-01|	6,760,784,461.0|
-|2022-06-01|	6,651,015,860.0|
+|2020-03-01	|6,855,987,259.0|
+|2020-04-01|	6,559,192,806.0|
+|2020-05-01|	6,940,094,730.0|
 |:|:|
 
 _** hasil hanya menampilkan 5 baris pertama_
@@ -100,7 +101,7 @@ _** hasil hanya menampilkan 5 baris pertama_
 
 ## 6. Top 10 Province by Nett Sales
 ```sql
-SELECT
+select
   province as province,
   branch_name as branch_type,
   SUM(nett_sales) AS total_nett_sales,
@@ -109,8 +110,8 @@ SELECT
   ) AS total_nett_sales_province
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by province, branch_type
-order by total_nett_sales desc
-limit 10
+order by total_nett_sales_province desc, branch_type
+limit 30
 ```
 Result
 |province|	branch_type|	total_nett_sales|	total_nett_sales_province	|
@@ -127,7 +128,7 @@ _** hasil hanya menampilkan 2 provinsi pertama dengan total nett sales tertinggi
 
 ## 7. Top 10 Province by Total Transactions
 ```sql
-SELECT
+select
   province as province,
   branch_name as branch_type,
   count(transaction_id) AS total_transaction,
@@ -136,8 +137,8 @@ SELECT
   ) AS total_transactions_province
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by province, branch_type
-order by total_transaction desc
-limit 10
+order by total_transactions_province desc, branch_type
+limit 30
 ```
 Result
 |province|	branch_type|	total_transactions|	total_transactions_province	|
@@ -156,17 +157,22 @@ _** hasil hanya menampilkan 2 provinsi pertama dengan total transactions terting
 ```sql
 select
   branch_name as branch_type,
-  COUNT(DISTINCT transaction_id) AS total_transactions
+  count(distinct transaction_id) as total_transactions,
+  round(
+    count(distinct transaction_id)
+    / sum(count(distinct transaction_id)) over () * 100,
+    1
+  ) as percentage
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by branch_type
 order by total_transactions desc
 ```
 Result
-|branch_type|	total_transactions|
-|--|--|
-|Kimia Farma - Apotek	|227,677|
-|Kimia Farma - Klinik & Apotek|	222,718|
-|Kimia Farma - Klinik-Apotek-Laboratorium|	222,063|
+|branch_type|	total_transactions|percentage|
+|--|--|--|
+|Kimia Farma - Apotek	|227,677|33.9|
+|Kimia Farma - Klinik & Apotek|	222,718|33.1|
+|Kimia Farma - Klinik-Apotek-Laboratorium|	222,063|33.0|
 
 ## 9. Top 10 Products by Total Transactions
 ```sql
@@ -200,23 +206,28 @@ limit 5
 Result
 |product_id|	total_transactions|
 |--|--|
-|KF953|	4106577825.0|
-|KF633|	4031493928.0|
-|KF977|	3963848400.0|
-|KF710|	3947534800.0|
-|KF881|	3938881372.0|
+|KF953|	4,106,577,825.0|
+|KF633|	4,031,493,928.0|
+|KF977|	3,963,848,400.0|
+|KF710|	3,947,534,800.0|
+|KF881|	3,938,881,372.0|
 
 ## 11. Customer Transaction Frequency
 ```sql
 select  
   transaction_frequency_group as customer_segment,
-  count(customer_name) as total_customer
+  count(distinct customer_name) as total_customer,
+  round(
+    count(distinct customer_name)
+    / sum(count(distinct customer_name)) over () * 100,
+    0
+  ) as percentage
 from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
 group by customer_segment
 order by total_customer desc
 ```
 Result
-|customer_segment|	total_customer|
-|--|--|
-|Repeat Customer|	518956|
-|One-time Customer|	153502|
+|customer_segment|	total_customer|percentage|
+|--|--|--|
+|One-time Customer|	153502|58.0|
+|Repeat Customer	|111099|42.0|
