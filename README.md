@@ -18,3 +18,8 @@ The dataset used contains information on transactions (kf_final_transaction), br
 # Dashboard
 [View Interactive Dashboard](https://datastudio.google.com/s/mk6-XHrgb4Q)
 ![Business Performance Dashboard](dashboard/dashboard_image.png)
+## Insights
+- Overall business performance remained relatively stable during 2020–2023, with total net sales of Rp321.2 billion and total net profit of Rp91.2 billion.
+- Sales consistently dropped sharply in February each year, indicating a potential seasonal pattern in Kimia Farma's sales performance.
+- Jawa Barat was the top-performing province in terms of nett sales and transaction volume, making it one of the Kimia Farma's key revenue contributors.
+- Transactions are dominated by one-time customers, accounting for approximately 58%, while repeat customers make up around 42%. This indicates that there is still an opportunity to improve customer retention.
