@@ -1,137 +1,221 @@
-# Pertanyaan Analisis
-### 1. Bagaimana performa bisnis Kimia Farma secara keseluruhan? _Overall Performance_
-- Berapa total nett sales?
-- Berapa total nett profit?
-- Berapa total transaksi?
-- Berapa rata-rata nilai transaksi?
-- Berapa profit margin keseluruhan?
-- Bagaimana perkembangan sales dari waktu ke waktu?
-- Bagaimana perkembangan profit dari waktu ke waktu?
-- Bagaimana perkembangan jumlah transaksi dari waktu ke waktu?
-- Bulan/periode mana yang memiliki sales tertinggi?
-- Bulan/periode mana yang memiliki profit tertinggi?
-- Bulan/periode mana yang memiliki performa terendah?
-- Apakah pertumbuhan sales diikuti oleh pertumbuhan profit?
-- Apakah terdapat periode dengan sales tinggi tetapi profit rendah?
-- Apakah performa bisnis menunjukkan tren meningkat, menurun, atau fluktuatif?
+## 1. Cumulative Overall Performance
+```sql
+select 
+  sum(nett_sales) as total_nett_sales,
+  sum(nett_profit) as total_nett_profit,
+  count(transaction_id) as total_transaction,
+  sum(nett_sales) / count(transaction_id) AS avg_transaction_value,
+  avg(branch_rating) as avg_branch_rating,
+  avg(transaction_rating) as avg_transaction_rating,
+  count(distinct customer_name) AS unique_customers
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+```
+Result
+|total_nett_sales|	total_nett_profit|	total_transaction	|avg_transaction_value|	avg_branch_rating	|avg_transaction_rating|	unique_customers|
+|---|---|--|--|--|--|--|
+|321,171,190,319.0|	91,214,988,059.850449|	672,458	|477,607.80646374938|	4.44798351718632|	4.0000330132143089|	264,601|
 
-### 2. Bagaimana performa setiap cabang Kimia Farma? _Branch Performance_
-- Cabang mana yang menghasilkan nett sales tertinggi?
-- Cabang mana yang menghasilkan nett sales terendah?
-- Cabang mana yang menghasilkan nett profit tertinggi?
-- Cabang mana yang menghasilkan nett profit terendah?
-- Cabang mana yang memiliki jumlah transaksi terbanyak?
-- Cabang mana yang memiliki jumlah transaksi paling sedikit?
-- Cabang mana yang memiliki average transaction value tertinggi?
-- Cabang mana yang memiliki profit margin tertinggi?
-- Cabang mana yang memiliki profit margin terendah?
-- Cabang mana yang memberikan kontribusi terbesar terhadap total sales?
-- Cabang mana yang memberikan kontribusi terbesar terhadap total profit?
-- Apakah cabang dengan sales tinggi juga memiliki profit tinggi?
-- Apakah cabang dengan transaksi tinggi juga memiliki sales tinggi?
-- Cabang mana yang memiliki high sales tetapi low profit margin?
-- Cabang mana yang memiliki low sales tetapi high profit margin?
-- Cabang mana yang paling membutuhkan perhatian berdasarkan kombinasi sales, transaksi, dan profit?
+## 2. Nett Sales and Profit YoY
+```sql
+select 
+  date_trunc(date, year) as year,
+  sum(nett_sales) as total_nett_sales,
+  sum(nett_profit) as total_nett_profit
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by year
+```
+Result
+|year| total_nett_sales|	total_nett_profit|
+|--|--|--|
+|2023-01-01|	80,117,292,611.0|	22,757,862,557.899982|
+|2022-01-01|	80,578,445,844.0|	22,883,598,882.799908|
+|2020-01-01|	80,437,605,040.0|	22,842,355,149.649975|
+|2021-01-01|	80,037,846,824.0|	22,731,171,469.500187|
 
-### 3.Bagaimana performa Kimia Farma berdasarkan wilayah? _Geographic Performance_
-- Provinsi mana yang menghasilkan sales tertinggi?
-- Provinsi mana yang menghasilkan profit tertinggi?
-- Provinsi mana yang memiliki jumlah transaksi terbanyak?
-- Provinsi mana yang memiliki profit margin tertinggi?
-- Kota mana yang menghasilkan sales tertinggi?
-- Kota mana yang menghasilkan profit tertinggi?
-- Bagaimana kontribusi masing-masing provinsi terhadap total sales?
-- Bagaimana kontribusi masing-masing provinsi terhadap total profit?
-- Apakah provinsi dengan sales tinggi juga memiliki profit tinggi?
-- Apakah ada provinsi dengan sales tinggi tetapi margin rendah?
-- Bagaimana distribusi cabang di setiap provinsi?
-- Apakah profit suatu provinsi hanya bergantung pada beberapa cabang tertentu?
-- Cabang mana yang menjadi kontributor utama dalam setiap provinsi?
-- Wilayah mana yang menunjukkan performa paling kuat dan paling lemah?
+## 3. Monthly Nett Sales
+```sql
+select 
+  date_trunc(date, month) as month,
+  sum(nett_sales) as total_nett_sales
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by month
+```
+Result
+|month|	total_nett_sales|
+|--|--|
+|2023-01-01|	6842843272.0|
+|2022-01-01|	6869281246.0|
+|2020-02-01|	6414736842.0|
+|2020-07-01|	6760784461.0|
+|2022-06-01|	6651015860.0|
+|:|:|
 
-### 4. Produk apa yang paling penting bagi bisnis? _Product Performance_
-- Produk apa yang memiliki sales tertinggi?
-- Produk apa yang memiliki profit tertinggi?
-- Produk apa yang paling banyak ditransaksikan?
-- Produk apa yang memiliki profit margin tertinggi?
-- Produk apa yang memiliki profit margin terendah?
-- Produk apa yang memberikan kontribusi terbesar terhadap total sales?
-- Produk apa yang memberikan kontribusi terbesar terhadap total profit?
-- Apakah produk dengan sales tertinggi juga memiliki profit tertinggi?
-- Produk mana yang memiliki high sales tetapi low profit?
-- Produk mana yang memiliki low sales tetapi high profit margin?
-- Produk mana yang memiliki transaction volume tinggi tetapi profit rendah?
-- Produk mana yang memiliki transaction volume rendah tetapi profit tinggi?
-- Produk apa yang paling dominan di setiap provinsi?
-- Produk apa yang paling dominan di setiap cabang?
-- Apakah terdapat produk tertentu yang hanya kuat di wilayah tertentu?
-  
-### 5. Bagaimana pengaruh diskon terhadap performa bisnis? Discount Analysis
-- Berapa total nilai diskon yang diberikan?
-- Berapa rata-rata discount percentage?
-- Berapa nett sales yang dihasilkan setelah diskon?
-- Bagaimana sales berdasarkan tingkat diskon?
-- Bagaimana profit berdasarkan tingkat diskon?
-- Bagaimana profit margin berdasarkan tingkat diskon?
-- Apakah transaksi dengan diskon lebih tinggi menghasilkan sales lebih tinggi?
-- Apakah diskon tinggi menghasilkan profit yang lebih rendah?
-- Berapa discount level yang menghasilkan sales paling tinggi?
-- Berapa discount level yang menghasilkan profit paling tinggi?
-- Apakah diskon memberikan keuntungan yang sebanding dengan pengurangan revenue?
-- Cabang mana yang memberikan diskon paling besar?
-- Produk mana yang paling sering mendapatkan diskon?
-- Produk mana yang mendapatkan diskon besar tetapi tetap menghasilkan profit tinggi?
-- Apakah terdapat produk/cabang yang memberikan diskon terlalu besar dibandingkan kontribusi sales-nya?
+_** hasil hanya menampilkan 5 baris pertama_
 
-### 6. Bagaimana customer experience di setiap cabang? _Customer Experience_
-- Berapa rata-rata rating setiap cabang?
-- Cabang mana yang memiliki rating tertinggi?
-- Cabang mana yang memiliki rating terendah?
-- Bagaimana distribusi rating transaksi?
-- Cabang mana yang memiliki rating transaksi tertinggi?
-- Cabang mana yang memiliki rating transaksi terendah?
-- Apakah rating cabang konsisten dengan rating transaksi?
-- Cabang mana yang memiliki gap terbesar antara rating cabang dan rating transaksi?
-- Apakah terdapat cabang dengan rating tinggi tetapi rating transaksi rendah?
-- Apakah terdapat cabang dengan rating rendah tetapi rating transaksi tinggi?
-- Apakah customer experience berbeda antar-provinsi?
-- Apakah cabang dengan rating tinggi memiliki sales lebih tinggi?
+## 4. Profit by Province
+```sql
+select 
+  province,
+  sum(nett_profit) as total_profit
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by province
+order by total_profit desc
+```
+Result
+|province|	total_profit|
+|--|--|
+|Jawa Barat|	26,940,703,195.150703|
+|Sumatera Utara|	6,517,187,359.849968|
+|Jawa Tengah|	6,318,005,348.2499571|
+|Jawa Timur|	4,722,764,504.199955|
+|Sulawesi Utara|	4,516,325,323.6000013|
+|:|:|
 
-### 7. Bagaimana pola transaksi dan customer behavior? _Customer / Transaction Behavior_
-- Berapa rata-rata transaksi per cabang?
-- Berapa rata-rata nilai transaksi?
-- Bagaimana distribusi nilai transaksi?
-- Produk apa yang paling sering dibeli?
-- Produk apa yang jarang ditransaksikan?
-- Cabang mana yang memiliki transaction volume tertinggi?
-- Bagaimana transaction volume berubah dari waktu ke waktu?
-- Apakah transaction volume berkaitan dengan sales?
-- Apakah transaction volume berkaitan dengan profit?
-- Apakah terdapat periode tertentu dengan lonjakan transaksi?
-- Apakah produk tertentu mendominasi transaksi pada cabang tertentu?
+_** hasil hanya menampilkan 5 baris pertama_
 
-### 8. Di mana terdapat peluang atau masalah bisnis yang perlu diperhatikan? _Business Opportunities & Problems_
-- Cabang mana yang memiliki performa di bawah rata-rata?
-- Produk mana yang memiliki sales rendah dan profit rendah?
-- Cabang mana yang memiliki sales tinggi tetapi margin rendah?
-- Produk mana yang memiliki sales tinggi tetapi margin rendah?
-- Cabang mana yang memiliki rating rendah sekaligus sales rendah?
-- Apakah ada wilayah yang memiliki potensi sales tinggi tetapi performanya rendah?
-- Produk mana yang berpotensi ditingkatkan penjualannya?
-- Cabang mana yang membutuhkan evaluasi?
-- Apakah terdapat pola diskon yang kurang efektif?
-- Apakah profit terlalu terkonsentrasi pada beberapa produk/cabang?
-- Apa faktor yang tampaknya berkaitan dengan performa cabang?
-- Apa area yang paling potensial untuk meningkatkan sales?
-- Apa area yang paling potensial untuk meningkatkan profit?
+## 5. Top Rated Branch with Low Transactions Ratings
+```sql
+select 
+  branch_id as branch_id,
+  avg(branch_rating) as avg_branch_rating,
+  avg(transaction_rating) as avg_transaction_rating,
+  avg(branch_rating) - avg(transaction_rating) as gap_rating
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by branch_id
+order by gap_rating desc
+limit 5
+```
+Result
+|branch_id|	avg_branch_rating|	avg_transaction_rating|	gap_rating|
+|--|--|--|--|
+|82157	|5.0|	3.9051470588235322|	1.0948529411764678|
+|44567|	5.0|	3.9306024096385537|	1.0693975903614463|
+|13775|	5.0	|3.931638418079098|	1.068361581920902|
+|31872|	5.0|	3.9349593495934938|	1.0650406504065062|
+|62707|	5.0|	3.9572916666666655|	1.0427083333333345|
+|:|:|
 
-what we need to analyze
-Snapshot Data
-● Perbandingan Pendapatan Kimia Farma dari tahun ke tahun
-● Top 10 Total transaksi cabang provinsi
-● Top 10 Nett sales cabang provinsi
-● Top 5 Cabang Dengan Rating Tertinggi, namun Rating
-Transaksi Terendah
-● Indonesia's Geo Map Untuk Total Profit Masing-masing
-Provinsi
-● Dan analisis lainnya yang dapat anda eksplorasi
+_** hasil hanya menampilkan 5 baris pertama_
+
+## 6. Top 10 Province by Nett Sales
+```sql
+SELECT
+  province as province,
+  branch_name as branch_type,
+  SUM(nett_sales) AS total_nett_sales,
+  SUM(SUM(nett_sales)) OVER (
+    PARTITION BY province
+  ) AS total_nett_sales_province
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by province, branch_type
+order by total_nett_sales desc
+limit 10
+```
+Result
+|province|	branch_type|	total_nett_sales|	total_nett_sales_province	|
+|--|--|--|--|
+|Jawa Barat|	Kimia Farma - Apotek|	34,196,247,476.0|	94,869,594,875.0|
+|Jawa Barat|	Kimia Farma - Klinik-Apotek-Laboratorium|	33,291,979,665.0|	94,869,594,875.0|
+|Jawa Barat|	Kimia Farma - Klinik & Apotek|	27,381,367,734.0|	94,869,594,875.0|
+|Sumatera Utara	|Kimia Farma - Klinik-Apotek-Laboratorium|	8,372,000,917.0	|22,952,159,897.0|
+|Sumatera Utara	|Kimia Farma - Apotek	|8,047,112,187.0|	22,952,159,897.0|
+|Sumatera Utara	|Kimia Farma - Klinik & Apotek|	6,533,046,793.0|	22,952,159,897.0|
+|:|:|
+
+_** hasil hanya menampilkan 2 provinsi pertama dengan total nett sales tertinggi_
+
+## 7. Top 10 Province by Total Transactions
+```sql
+SELECT
+  province as province,
+  branch_name as branch_type,
+  count(transaction_id) AS total_transaction,
+  SUM(count(transaction_id)) OVER (
+    PARTITION BY province
+  ) AS total_transactions_province
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by province, branch_type
+order by total_transaction desc
+limit 10
+```
+Result
+|province|	branch_type|	total_transactions|	total_transactions_province	|
+|--|--|--|--|
+|Jawa Barat	|Kimia Farma - Apotek	|71,508	|198,723|
+|Jawa Barat|	Kimia Farma - Klinik-Apotek-Laboratorium|	69,874|	198,723|
+|Jawa Barat|	Kimia Farma - Klinik & Apotek|	57,341	|198,723|
+|Sumatera Utara|	Kimia Farma - Klinik-Apotek-Laboratorium|	17,561	|48,178|
+|Sumatera Utara|	Kimia Farma - Apotek|	16,903|	48,178|
+|Sumatera Utara|	Kimia Farma - Klinik & Apotek|	13,714	|48,178|
+|:|:|
+
+_** hasil hanya menampilkan 2 provinsi pertama dengan total transactions tertinggi_
+
+## 8. Transactions Distribution by Branch Type
+```sql
+select
+  branch_name as branch_type,
+  COUNT(DISTINCT transaction_id) AS total_transactions
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by branch_type
+order by total_transactions desc
+```
+Result
+|branch_type|	total_transactions|
+|--|--|
+|Kimia Farma - Apotek	|227,677|
+|Kimia Farma - Klinik & Apotek|	222,718|
+|Kimia Farma - Klinik-Apotek-Laboratorium|	222,063|
+
+## 9. Top 10 Products by Total Transactions
+```sql
+select  
+  product_id as product_id,
+  count(transaction_id) as total_transactions
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by product_id
+order by total_transactions desc
+limit 5
+```
+Result
+|product_id|	total_transactions|
+|--|--|
+|KF519|	4608|
+|KF262|	4590|
+|KF346|	4587|
+|KF576|	4582|
+|KF943|	4582|
+
+## 10. Top 10 Products by Nett Sales
+```sql
+select  
+  product_id as product_id,
+  sum(nett_sales) as total_nett_sales
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by product_id
+order by total_nett_sales desc
+limit 5
+```
+Result
+|product_id|	total_transactions|
+|--|--|
+|KF953|	4106577825.0|
+|KF633|	4031493928.0|
+|KF977|	3963848400.0|
+|KF710|	3947534800.0|
+|KF881|	3938881372.0|
+
+## 11. Customer Transaction Frequency
+```sql
+select  
+  transaction_frequency_group as customer_segment,
+  count(customer_name) as total_customer
+from `rakamin-kf-analytics-508303.kimia_farma.kf_table_analysis`
+group by customer_segment
+order by total_customer desc
+```
+Result
+|customer_segment|	total_customer|
+|--|--|
+|Repeat Customer|	518956|
+|One-time Customer|	153502|
