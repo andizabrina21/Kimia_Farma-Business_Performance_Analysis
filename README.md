@@ -14,7 +14,13 @@ This project aims to comprehensively analyze Kimia Farma's business performance 
 2. Creating an analysis table in BigQuery to serve as the data source for dashboard.
 3. Creating and developing an interactive dashboard using Google Looker Studio..
 # Datasets
-The dataset used contains information on transactions (kf_final_transaction), branches (kf_kantor_cabang), products (kf_product), and inventory (kf_inventory) during the 2020–2023 period.
+The dataset used contains information on 
+- transactions (_kf_final_transaction_)
+- branches (_kf_kantor_cabang_)
+- products (_kf_product_)
+- inventory (_kf_inventory_)
+  
+Data period: 2020–2023.
 # Dashboard
 [View Interactive Dashboard](https://datastudio.google.com/s/mk6-XHrgb4Q)
 ![Business Performance Dashboard](dashboard/dashboard_image.png)
