@@ -1,4 +1,4 @@
-## 1. Cumulative Overall Performance
+## 1. Business Performance Summary
 ```sql
 select 
   sum(nett_sales) as total_nett_sales,
